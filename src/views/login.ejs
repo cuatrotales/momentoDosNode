@@ -7,16 +7,16 @@
       <div class="container mt-5">
         <h2 class="h2">Login in my app</h2>
         <p class="lead">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem culpa,
-          commodi nostrum dolorem consequatur obcaecati fuga mollitia. Officia
-          rerum quisquam, cumque minima numquam necessitatibus maiores
-          voluptate, unde vero suscipit nesciunt.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
+          numquam molestias vitae quis nostrum sunt veritatis voluptas, adipisci
+          in ipsa assumenda consequuntur commodi blanditiis, perspiciatis
+          dolorum iusto ipsum libero quisquam?
         </p>
       </div>
     </div>
     <div class="col-sm-12 col-md-6 text-end">
       <form
-        action="/login"
+        action="/user/login"
         method="post"
         class="container w-50 mt-5 p-2 text-center border"
       >
@@ -28,6 +28,7 @@
             id="floatingInput"
             placeholder="Username"
             name="username"
+            required
           />
           <label for="floatingInput">Username</label>
         </div>
@@ -38,6 +39,7 @@
             id="floatingPassword"
             placeholder="Password"
             name="password"
+            required
           />
           <label for="floatingPassword">Password</label>
         </div>
@@ -65,7 +67,7 @@
     </div>
     <div class="col-sm-12 col-md-6 text-end">
       <form
-        action="/registerUser"
+        action="/user/register"
         method="post"
         class="container w-50 mt-5 p-2 text-center border"
       >
@@ -76,6 +78,7 @@
             class="form-control"
             placeholder="Name"
             name="name"
+            required
           />
           <label for="floatingInput">Name</label>
         </div>
@@ -85,6 +88,7 @@
             class="form-control"
             placeholder="Username"
             name="username"
+            required
           />
           <label for="floatingInput">Username</label>
         </div>
@@ -94,15 +98,16 @@
             class="form-control"
             placeholder="Password"
             name="password"
+            required
           />
           <label for="floatingPassword">Password</label>
         </div>
 
         <button class="w-50 btn btn-primary d-block mx-auto" type="submit">
-          Sign in
+          Sign up
         </button>
 
-        <a class="text-muted d-block" href="/register">Sign up</a>
+        <a class="text-muted d-block" href="/login">Sign in</a>
       </form>
     </div>
   </div>

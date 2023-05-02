@@ -1,3 +1,4 @@
+//#region atributos
 const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
@@ -9,36 +10,59 @@ let userAuth = false;
 let users;
 let cars;
 let rents;
+//#endregion
+
+//#region functions
+async function obtenerDatos() {
+  users = await User.find();
+  cars = await Car.find();
+  rents = await Rent.find();
+}
+//#endregion
 
 //#region init
-
 router.get("/", async (req, res) => {
   try {
+    obtenerDatos();
     if (userAuth) {
-      cars = await Car.find();
-
       res.render("car", {
         cars: cars,
       });
     } else {
-      users = await User.find();
-      console.log(users.length);
       if (users != 0 && users.length) {
-        res.render("login", { users: users, userAuth: userAuth });
+        res.redirect("/login");
       } else {
-        res.render("login", { users: false, userAuth: userAuth });
+        res.redirect("/register");
       }
     }
   } catch (error) {
     res.status(400).json({ error });
   }
 });
-
 //#endregion
 
 //#region user
+router.get("/login", async (req, res, next) => {
+  try {
+    obtenerDatos();
+    userAuth = false;
+    res.render("login", { users: users, userAuth: userAuth });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
 
-router.post("/login", async (req, res, next) => {
+router.get("/register", async (req, res, next) => {
+  try {
+    obtenerDatos();
+    userAuth = false;
+    res.render("login", { users: false, userAuth: userAuth });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.post("/user/login", async (req, res, next) => {
   try {
     const validUser = await User.findOne({ username: req.body.username });
 
@@ -58,8 +82,7 @@ router.post("/login", async (req, res, next) => {
     res.status(400).json({ error });
   }
 });
-
-router.post("/registerUser", async (req, res, next) => {
+router.post("/user/register", async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (user) {
@@ -77,27 +100,41 @@ router.post("/registerUser", async (req, res, next) => {
     res.status(400).json({ error: "No se pudo guardar" });
   }
 });
-
-router.get("/logout", async (req, res, next) => {
+router.get("/user/logout", async (req, res, next) => {
   try {
-    userAuth = false;
-    res.render("login", { users: false, userAuth: userAuth });
+    res.redirect("/login");
   } catch (error) {
     res.status(400).json({ error });
   }
 });
-
 //#endregion
 
 //#region car
 router.get("/car", async (req, res) => {
   try {
+    obtenerDatos();
     if (userAuth) {
-      cars = await Car.find();
-
       res.render("car", { cars: cars });
     } else {
-      res.render("login", { userAuth: userAuth });
+      res.redirect("/login");
+    }
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+router.post("/car/register", async (req, res) => {
+  try {
+    const car = await Car.findOne({ rentNumber: req.body.rentNumber });
+    if (car) {
+      const plateNumber = req.body.plateNumber === car.plateNumber;
+      if (plateNumber) {
+        await Car.updateOne({ plateNumber: req.body.plateNumber }, req.body);
+      }
+      res.redirect("/car");
+    } else {
+      const car = new Car(req.body);
+      await car.save();
+      res.redirect("/car");
     }
   } catch (error) {
     res.status(400).json({ error });
@@ -106,23 +143,22 @@ router.get("/car", async (req, res) => {
 //#endregion
 
 //#region rent
-
 router.get("/rent", async (req, res) => {
   try {
+    obtenerDatos();
     if (userAuth) {
-      rents = await Rent.find();
-
-      res.render("rent", {
-        rents,
+      res.render("rentacar", {
+        users: users,
+        cars: cars,
+        rents: rents,
       });
     } else {
-      res.render("login");
+      res.redirect("/login");
     }
   } catch (error) {
     res.status(400).json({ error });
   }
 });
-
 router.post("/rent/rentacar", async (req, res) => {
   try {
     const rent = await Rent.findOne({ rentNumber: req.body.rentNumber });
@@ -134,15 +170,14 @@ router.post("/rent/rentacar", async (req, res) => {
         await Rent.updateOne({ rentNumber: req.body.rentNumber }, req.body);
       }
     } else {
-      const user = new User(req.body);
-      await user.save();
-      // res.redirect("/");
+      const rent = new Rent(req.body);
+      await rent.save();
+      res.redirect("/rent");
     }
   } catch (error) {
     res.status(400).json({ error });
   }
 });
-
 //#endregion
 
 module.exports = router;
