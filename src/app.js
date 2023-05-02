@@ -7,7 +7,7 @@ const app = express();
 
 mongoose
   .connect("mongodb://localhost:27017/dbRentacar") //Usar el localhost con el puerto de mongoose
-  .then((db) => console.log("Database MongoDB - dbtasks connected"))
+  .then((db) => console.log("Database MongoDB - dbRentacar connected"))
   .catch((err) => console.log(err));
 
 
