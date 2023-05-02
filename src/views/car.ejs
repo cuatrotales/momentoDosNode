@@ -2,26 +2,57 @@
 
 <main class="container">
   <div class="row">
-    <div class="col-sm-12 col-md-6">
-      <div class="container mt-5">
-        <h2 class="h2">Title</h2>
-        <p class="lead">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem culpa,
-          commodi nostrum dolorem consequatur obcaecati fuga mollitia. Officia
-          rerum quisquam, cumque minima numquam necessitatibus maiores
-          voluptate, unde vero suscipit nesciunt.
-        </p>
+    <div class="col-sm-12 col-md-6 mx-auto">
+      <div class="container mt-5 w-75">
+        <h2 class="h2">Register Car</h2>
+        <form action="/car/register" method="post">
+          <div class="form-floating m-2">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Name"
+              name="plateNumber"
+              required
+            />
+            <label for="floatingInput">Plate</label>
+          </div>
+          <div class="form-floating m-2">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Brand"
+              name="brand"
+              required
+            />
+            <label for="floatingInput">Brand</label>
+          </div>
+          <button class="w-50 btn btn-primary d-block mx-auto" type="submit">
+            Register a Car
+          </button>
+        </form>
       </div>
     </div>
-    <div class="col-sm-12 col-md-6 text-end">
-      <div class="container">
-        <h2 class="h2">Title</h2>
-        <p class="lead">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Autem culpa,
-          commodi nostrum dolorem consequatur obcaecati fuga mollitia. Officia
-          rerum quisquam, cumque minima numquam necessitatibus maiores
-          voluptate, unde vero suscipit nesciunt.
-        </p>
+    <div class="col-sm-12 col-md-6 mx-auto">
+      <div class="container mt-5">
+        <h2 class="h2">Cars</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Plate Number</th>
+              <th scope="col">Brand</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(var i=0; i < cars.length; i++) { %>
+            <tr>
+              <td><%= cars[i].plateNumber %></td>
+              <td><strong><%= cars[i].brand %></strong></td>
+              <td><%= cars[i].status %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
