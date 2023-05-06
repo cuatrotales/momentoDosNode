@@ -17,10 +17,10 @@
             <label for="floatingInput">Rent Number</label>
           </div>
           <div class="form-floating m-2">
-            <select class="form-select" id="floatingSelect">
+            <select class="form-select" id="floatingSelect" name="username">
               <option selected>Select a User</option>
               <% for(var i=0; i < users.length; i++) { %>
-              <option value="<% users[i].username %>">
+              <option value="<%= users[i].username %>">
                 <%= users[i].username %>
               </option>
               <% } %>
@@ -28,7 +28,7 @@
             <label for="floatingSelect">Select a User</label>
           </div>
           <div class="form-floating m-2">
-            <select class="form-select" id="floatingSelect">
+            <select class="form-select" id="floatingSelect" name="plateNumber">
               <option selected>Select a Plate</option>
               <% for(var i=0; i < cars.length; i++) { %>
               <option value="<%= cars[i].plateNumber %>">

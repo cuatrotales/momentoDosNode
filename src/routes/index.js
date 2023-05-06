@@ -1,6 +1,7 @@
 //#region atributos
 const express = require("express");
 const router = express.Router();
+
 const User = require("../models/user");
 const Car = require("../models/car");
 const Rent = require("../models/rent");
@@ -76,7 +77,7 @@ router.post("/user/login", async (req, res, next) => {
         res.status(400).json({ error: "incorrect password" });
       }
     } else {
-      res.render("register");
+      res.redirect("/register");
     }
   } catch (error) {
     res.status(400).json({ error });
@@ -129,8 +130,11 @@ router.post("/car/register", async (req, res) => {
       const plateNumber = req.body.plateNumber === car.plateNumber;
       if (plateNumber) {
         await Car.updateOne({ plateNumber: req.body.plateNumber }, req.body);
+      } else {
+        const car = new Car(req.body);
+        await car.save();
+        res.redirect("/car");
       }
-      res.redirect("/car");
     } else {
       const car = new Car(req.body);
       await car.save();
@@ -168,6 +172,10 @@ router.post("/rent/rentacar", async (req, res) => {
 
       if (plateNumber) {
         await Rent.updateOne({ rentNumber: req.body.rentNumber }, req.body);
+      } else {
+        const rent = new Rent(req.body);
+        await rent.save();
+        res.redirect("/rent");
       }
     } else {
       const rent = new Rent(req.body);
