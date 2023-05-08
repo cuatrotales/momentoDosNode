@@ -30,14 +30,14 @@ router.get("/", async (req, res) => {
         cars: cars,
       });
     } else {
-      if (users != 0 && users.length) {
+      if (users != 0) {
         res.redirect("/login");
       } else {
         res.redirect("/register");
       }
     }
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json({ error: error });
   }
 });
 //#endregion
@@ -133,15 +133,21 @@ router.post("/car/register", async (req, res) => {
       } else {
         const car = new Car(req.body);
         await car.save();
-        res.redirect("/car");
+        setTimeout(() => {
+          res.redirect("/car");
+        }, 1500);
       }
     } else {
       const car = new Car(req.body);
       await car.save();
-      res.redirect("/car");
+      setTimeout(() => {
+        res.redirect("/car");
+      }, 1500);
     }
   } catch (error) {
-    res.status(400).json({ error });
+    setTimeout(() => {
+      res.status(400).json({ error });
+    }, 1500);
   }
 });
 //#endregion
@@ -175,15 +181,46 @@ router.post("/rent/rentacar", async (req, res) => {
       } else {
         const rent = new Rent(req.body);
         await rent.save();
-        res.redirect("/rent");
+        await Car.updateOne(
+          { plateNumber: req.body.plateNumber },
+          { status: false }
+        );
+        setTimeout(() => {
+          res.redirect("/rent");
+        }, 1500);
       }
     } else {
       const rent = new Rent(req.body);
       await rent.save();
-      res.redirect("/rent");
+      await Car.updateOne(
+        { plateNumber: req.body.plateNumber },
+        { status: false }
+      );
+      setTimeout(() => {
+        res.redirect("/rent");
+      }, 1500);
     }
   } catch (error) {
-    res.status(400).json({ error });
+    setTimeout(() => {
+      res.status(400).json({ error });
+    }, 1500);
+  }
+});
+
+router.get("/rent/delete/:rentNumber/:plateNumber", async (req, res, next) => {
+  try {
+    await Rent.deleteOne({ rentNumber: req.params.rentNumber });
+    await Car.updateOne(
+      { plateNumber: req.params.plateNumber },
+      { status: true }
+    );
+    setTimeout(() => {
+      res.redirect("/rent");
+    }, 1500);
+  } catch (error) {
+    setTimeout(() => {
+      res.redirect("/rent");
+    }, 1500);
   }
 });
 //#endregion

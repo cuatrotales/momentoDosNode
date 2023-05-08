@@ -11,7 +11,7 @@
               type="text"
               class="form-control"
               placeholder="rentNumber"
-              name="plateNumber"
+              name="rentNumber"
               required
             />
             <label for="floatingInput">Rent Number</label>
@@ -30,11 +30,12 @@
           <div class="form-floating m-2">
             <select class="form-select" id="floatingSelect" name="plateNumber">
               <option selected>Select a Plate</option>
-              <% for(var i=0; i < cars.length; i++) { %>
+              <% for(var i=0; i < cars.length; i++) { if (cars[i].status ===
+              true) { %>
               <option value="<%= cars[i].plateNumber %>">
                 <%= cars[i].plateNumber %>
               </option>
-              <% } %>
+              <% }} %>
             </select>
             <label for="floatingSelect">Select a Plate Number</label>
           </div>
@@ -54,15 +55,24 @@
               <th scope="col">Username</th>
               <th scope="col">Plate Number</th>
               <th scope="col">Rent Date</th>
+              <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
             <% for(var i=0; i < rents.length; i++) { %>
             <tr>
               <td><%= rents[i].rentNumber %></td>
-              <td><strong><%= rents[i].username %></strong></td>
+              <td><%= rents[i].username %></td>
               <td><%= rents[i].plateNumber %></td>
               <td><%= rents[i].rentDate %></td>
+              <td>
+                <a
+                  href="/rent/delete/<%= rents[i].rentNumber %>/<%= rents[i].plateNumber %>"
+                  class="btn btn-danger"
+                >
+                  Borrar
+                </a>
+              </td>
             </tr>
             <% } %>
           </tbody>
