@@ -25,10 +25,9 @@ async function obtenerDatos() {
 router.get("/", async (req, res) => {
   try {
     obtenerDatos();
+
     if (userAuth) {
-      res.render("car", {
-        cars: cars,
-      });
+      res.render("car", { cars: cars });
     } else {
       if (users != 0) {
         res.redirect("/login");
@@ -49,7 +48,7 @@ router.get("/login", async (req, res, next) => {
     userAuth = false;
     res.render("login", { users: users, userAuth: userAuth });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json({ error: error });
   }
 });
 
@@ -80,18 +79,22 @@ router.post("/user/login", async (req, res, next) => {
       res.redirect("/register");
     }
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json({ error: error });
   }
 });
+
 router.post("/user/register", async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (user) {
       const result = req.body.name === user.name;
-      if (result) {
-        await User.updateOne({ username: req.body.username }, req.body);
+
+      if (!result) {
+        const user = new User(req.body);
+        await user.save();
+        userAuth = false;
+        res.redirect("/");
       }
-      res.redirect("/");
     } else {
       const user = new User(req.body);
       await user.save();
@@ -101,8 +104,10 @@ router.post("/user/register", async (req, res, next) => {
     res.status(400).json({ error: "No se pudo guardar" });
   }
 });
+
 router.get("/user/logout", async (req, res, next) => {
   try {
+    userAuth = false;
     res.redirect("/login");
   } catch (error) {
     res.status(400).json({ error });
@@ -123,14 +128,14 @@ router.get("/car", async (req, res) => {
     res.status(400).json({ error });
   }
 });
+
 router.post("/car/register", async (req, res) => {
   try {
     const car = await Car.findOne({ rentNumber: req.body.rentNumber });
     if (car) {
       const plateNumber = req.body.plateNumber === car.plateNumber;
-      if (plateNumber) {
-        await Car.updateOne({ plateNumber: req.body.plateNumber }, req.body);
-      } else {
+
+      if (!plateNumber) {
         const car = new Car(req.body);
         await car.save();
         setTimeout(() => {
@@ -169,6 +174,7 @@ router.get("/rent", async (req, res) => {
     res.status(400).json({ error });
   }
 });
+
 router.post("/rent/rentacar", async (req, res) => {
   try {
     const rent = await Rent.findOne({ rentNumber: req.body.rentNumber });
@@ -176,9 +182,7 @@ router.post("/rent/rentacar", async (req, res) => {
     if (rent) {
       const plateNumber = req.body.plateNumber === rent.plateNumber;
 
-      if (plateNumber) {
-        await Rent.updateOne({ rentNumber: req.body.rentNumber }, req.body);
-      } else {
+      if (!plateNumber) {
         const rent = new Rent(req.body);
         await rent.save();
         await Car.updateOne(
