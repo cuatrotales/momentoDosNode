@@ -30,8 +30,7 @@
           <div class="form-floating m-2">
             <select class="form-select" id="floatingSelect" name="plateNumber">
               <option selected>Select a Plate</option>
-              <% for(var i=0; i < cars.length; i++) { if (cars[i].status ===
-              true) { %>
+              <% for(var i=0; i < cars.length; i++) { if (cars[i].status) { %>
               <option value="<%= cars[i].plateNumber %>">
                 <%= cars[i].plateNumber %>
               </option>
@@ -81,4 +80,5 @@
     </div>
   </div>
 </main>
-<% include('partials/footer'); %>
+
+<%- include('partials/footer'); %>

@@ -25,16 +25,17 @@ async function obtenerDatos() {
 router.get("/", async (req, res) => {
   try {
     obtenerDatos();
-
-    if (userAuth) {
-      res.render("car", { cars: cars });
-    } else {
-      if (users != 0) {
-        res.redirect("/login");
+    setTimeout(() => {
+      if (userAuth) {
+        res.render("car", { cars: cars });
       } else {
-        res.redirect("/register");
+        if (users != 0) {
+          res.redirect("/login");
+        } else {
+          res.redirect("/register");
+        }
       }
-    }
+    }, 1500);
   } catch (error) {
     res.status(400).json({ error: error });
   }
@@ -45,8 +46,10 @@ router.get("/", async (req, res) => {
 router.get("/login", async (req, res, next) => {
   try {
     obtenerDatos();
-    userAuth = false;
-    res.render("login", { users: users, userAuth: userAuth });
+    setTimeout(() => {
+      userAuth = false;
+      res.render("login", { users: users, userAuth: userAuth });
+    }, 1500);
   } catch (error) {
     res.status(400).json({ error: error });
   }
@@ -55,8 +58,10 @@ router.get("/login", async (req, res, next) => {
 router.get("/register", async (req, res, next) => {
   try {
     obtenerDatos();
-    userAuth = false;
-    res.render("login", { users: false, userAuth: userAuth });
+    setTimeout(() => {
+      userAuth = false;
+      res.render("login", { users: false, userAuth: userAuth });
+    }, 1500);
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -119,11 +124,13 @@ router.get("/user/logout", async (req, res, next) => {
 router.get("/car", async (req, res) => {
   try {
     obtenerDatos();
-    if (userAuth) {
-      res.render("car", { cars: cars });
-    } else {
-      res.redirect("/login");
-    }
+    setTimeout(() => {
+      if (userAuth) {
+        res.render("car", { cars: cars });
+      } else {
+        res.redirect("/login");
+      }
+    }, 1500);
   } catch (error) {
     res.status(400).json({ error });
   }
@@ -161,15 +168,17 @@ router.post("/car/register", async (req, res) => {
 router.get("/rent", async (req, res) => {
   try {
     obtenerDatos();
-    if (userAuth) {
-      res.render("rentacar", {
-        users: users,
-        cars: cars,
-        rents: rents,
-      });
-    } else {
-      res.redirect("/login");
-    }
+    setTimeout(() => {
+      if (userAuth) {
+        res.render("rentacar", {
+          users: users,
+          cars: cars,
+          rents: rents,
+        });
+      } else {
+        res.redirect("/login");
+      }
+    }, 1500);
   } catch (error) {
     res.status(400).json({ error });
   }
